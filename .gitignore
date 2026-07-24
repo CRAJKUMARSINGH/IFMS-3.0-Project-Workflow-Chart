@@ -49,3 +49,12 @@ Thumbs.db
 .local/
 
 attached_assets/*.zip
+
+# Redundant / build output / Replit-specific
+dist-netlify/
+*.tar.gz
+.agents/
+.replit
+.replitignore
+replit.md
+attached_assets/

@@ -1,8 +1,0 @@
-uploads = []
-generated = []
-
-[[outputs]]
-id = "cAEJz4ms44V_G7CCH_geB"
-uri = "file://artifacts/ifms-toolkit/ifms-netlify-deploy.tar.gz"
-type = "unspecified"
-title = "IFMS Toolkit — Updated Netlify Build (with Certificate)"
