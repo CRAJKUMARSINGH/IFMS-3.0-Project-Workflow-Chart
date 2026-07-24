@@ -1,0 +1,13 @@
+[build]
+  base = "artifacts/ifms-toolkit"
+  command = "npx vite build --config vite.netlify.config.ts"
+  publish = "artifacts/ifms-toolkit/dist-netlify"
+
+[build.environment]
+  NODE_VERSION = "24"
+  PNPM_VERSION = "11"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

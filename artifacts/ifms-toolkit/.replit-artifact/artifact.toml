@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/ifms/"
+title = "IFMS Rajasthan Toolkit"
+version = "1.0.0"
+id = "artifacts/ifms-toolkit"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/ifms/" ]
+localPort = 25460
+
+[services.development]
+run = "pnpm --filter @workspace/ifms-toolkit run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ifms-toolkit", "run", "build" ]
+publicDir = "artifacts/ifms-toolkit/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25460"
+BASE_PATH = "/ifms/"
