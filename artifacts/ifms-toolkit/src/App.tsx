@@ -296,7 +296,6 @@ function AppInner() {
                 <strong style={{ color: "#fff", fontSize: 14 }}>Premlata Jain</strong><br />
                 AAO<br />
                 PWD Rajasthan<br />
-                <a
               </div>
             </div>
 
