@@ -291,18 +291,12 @@ function AppInner() {
               borderRadius: 12, padding: "16px 18px",
             }}>
               <div style={{ fontSize: 20, marginBottom: 8 }}>👨‍💻</div>
-              <div style={{ fontSize: 12, fontWeight: 800, color: "#fde68a", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>Developed By</div>
+              <div style={{ fontSize: 12, fontWeight: 800, color: "#fde68a", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>An Initiative By</div>
               <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.7 }}>
-                <strong style={{ color: "#fff", fontSize: 14 }}>Raj Kumar Singh</strong><br />
-                AAO / Finance Officer<br />
+                <strong style={{ color: "#fff", fontSize: 14 }}>Premlata Jain</strong><br />
+                AAO<br />
                 PWD Rajasthan<br />
                 <a
-                  href="https://github.com/CRAJKUMARSINGH"
-                  target="_blank" rel="noopener noreferrer"
-                  style={{ color: "#7dd3fc", textDecoration: "none", fontSize: 12 }}
-                >
-                  🔗 github.com/CRAJKUMARSINGH
-                </a>
               </div>
             </div>
 
@@ -372,7 +366,7 @@ function AppInner() {
             gap: 10,
           }}>
             <div style={{ fontSize: 12, color: "#64748b" }}>
-              © 2025 Raj Kumar Singh · IFMS Rajasthan Toolkit · All rights reserved
+              © 2025 Premlata Jain · IFMS Rajasthan Toolkit · All rights reserved
             </div>
             <div style={{ fontSize: 13, color: "#94a3b8", display: "flex", alignItems: "center", gap: 6 }}>
               <span style={{ animation: "ifms-pulse-glow 2s ease-in-out infinite" }}>🌸</span>
