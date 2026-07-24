@@ -290,7 +290,7 @@ function AppInner() {
               border: "1px solid rgba(255,255,255,0.1)",
               borderRadius: 12, padding: "16px 18px",
             }}>
-              <div style={{ fontSize: 20, marginBottom: 8 }}>👨‍💻</div>
+              <div style={{ fontSize: 20, marginBottom: 8 }}>👩‍💼</div>
               <div style={{ fontSize: 12, fontWeight: 800, color: "#fde68a", marginBottom: 6, textTransform: "uppercase", letterSpacing: 1 }}>An Initiative By</div>
               <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.7 }}>
                 <strong style={{ color: "#fff", fontSize: 14 }}>Premlata Jain</strong><br />
