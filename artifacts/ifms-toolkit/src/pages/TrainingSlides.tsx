@@ -125,7 +125,7 @@ export default function TrainingSlides() {
             <div style={{ fontSize: 11, color: "#64748b", fontWeight: 700 }}>{selectedIndex + 1} / {serials.length}</div>
           </div>
           <div style={{ background: "#eef2f7", padding: 6 }}>
-            <img src={slidePath(selectedSerial)} alt={`IFMS training screenshot ${selectedSerial}`} style={{ display: "block", width: "100%", height: "min(78vh, 900px)", objectFit: "contain", borderRadius: 10, border: "1px solid #cbd5e1", background: "#fff" }} />
+            <img src={slidePath(selectedSerial)} alt={`IFMS training screenshot ${selectedSerial}`} style={{ display: "block", width: "100%", height: "auto", maxHeight: "min(78vh, 900px)", objectFit: "contain", borderRadius: 10, border: "1px solid #cbd5e1", background: "#fff" }} />
           </div>
           <div style={{ padding: "9px 12px" }}>
             <div style={{ display: "flex", gap: 10, alignItems: "flex-start", background: `${color}0d`, border: `1px solid ${color}35`, borderRadius: 11, padding: "8px 10px" }}>
