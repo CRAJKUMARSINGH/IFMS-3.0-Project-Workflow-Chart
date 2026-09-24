@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 
+type IdType = "TS" | "WO" | "FDPAID";
+
 function compactDate(value: string) {
   const [year, month, day] = value.split("-");
   return year && month && day ? `${day}${month}${year.slice(-2)}` : "000000";
@@ -12,7 +14,7 @@ function cleanPart(value: string, fallback: string) {
 
 export default function FRPAIDGenerator() {
   const today = new Date().toISOString().slice(0, 10);
-  const [prefix, setPrefix] = useState("FDPAID");
+  const [idType, setIdType] = useState<IdType>("FDPAID");
   const [division, setDivision] = useState("7542");
   const [date, setDate] = useState(today);
   const [serial, setSerial] = useState("01");
@@ -23,8 +25,8 @@ export default function FRPAIDGenerator() {
   const [copied, setCopied] = useState(false);
 
   const preview = useMemo(() => {
-    return `${prefix || "FDPAID"}/${cleanPart(division, "0000")}/${compactDate(date)}/${cleanPart(serial, "01").padStart(2, "0")}/${cleanPart(workCode, "WORK")}`;
-  }, [prefix, division, date, serial, workCode]);
+    return `${idType}/${cleanPart(division, "0000")}/${compactDate(date)}/${cleanPart(serial, "01").padStart(2, "0")}/${cleanPart(workCode, "WORK")}`;
+  }, [idType, division, date, serial, workCode]);
 
   function generate() {
     setGenerated(preview);
@@ -46,23 +48,24 @@ export default function FRPAIDGenerator() {
     <div style={{ padding: "22px 20px" }}>
       <div style={{ background: "linear-gradient(135deg,#312e81,#4f46e5 56%,#7c3aed)", color: "#fff", borderRadius: 18, padding: "22px 24px", marginBottom: 16, boxShadow: "0 10px 30px rgba(79,70,229,0.23)" }}>
         <div style={{ fontSize: 11, letterSpacing: 1.4, opacity: 0.75, fontWeight: 800 }}>IFMS ID MODULE · TRAINING DEMO</div>
-        <h2 style={{ margin: "6px 0 5px", fontSize: 23, fontWeight: 900 }}>FDPAID ID जनरेट करें</h2>
+        <h2 style={{ margin: "6px 0 5px", fontSize: 23, fontWeight: 900 }}>TS / WO / FDPAID ID बनाएं</h2>
         <p style={{ margin: 0, maxWidth: 720, color: "rgba(255,255,255,0.8)", fontSize: 13, lineHeight: 1.65 }}>
-          Serial, division, date और work code से एक साफ training ID बनाएँ। यह format आपके दिए हुए TS/FS/WO उदाहरण जैसा रखा गया है।
+          एक ही जगह से TS, WO या FDPAID का training/demo ID format तैयार करें। Official portal की वास्तविक ID को ही final record में मानें।
         </p>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.1fr) minmax(280px, 0.9fr)", gap: 16, alignItems: "start" }}>
         <section style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 16, padding: 18, boxShadow: "0 4px 18px rgba(15,23,42,0.06)" }}>
-          <div style={{ fontSize: 15, fontWeight: 900, color: "#1e293b", marginBottom: 4 }}>ID के हिस्से भरें</div>
+          <div style={{ fontSize: 15, fontWeight: 900, color: "#1e293b", marginBottom: 4 }}>ID का भाग और विवरण भरें</div>
           <div style={{ fontSize: 12, color: "#64748b", marginBottom: 16 }}>उदाहरण: <code style={{ color: "#4f46e5" }}>FDPAID/7542/240926/01/KACHRULAL</code></div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             <label style={{ display: "grid", gap: 5, fontSize: 11, fontWeight: 800, color: "#475569" }}>
-              Prefix
-              <select value={prefix} onChange={e => setPrefix(e.target.value)} style={{ width: "100%", padding: "10px 11px", border: "1px solid #cbd5e1", borderRadius: 8, font: "inherit", fontSize: 13, color: "#1e293b", background: "#fff" }}>
-                <option value="FDPAID">FDPAID (screenshot format)</option>
-                <option value="FRPAID">FRPAID (alternate entry)</option>
+              ID का प्रकार
+              <select value={idType} onChange={e => setIdType(e.target.value as IdType)} style={{ width: "100%", padding: "10px 11px", border: "1px solid #cbd5e1", borderRadius: 8, font: "inherit", fontSize: 13, color: "#1e293b", background: "#fff" }}>
+                <option value="TS">TS — Technical Sanction</option>
+                <option value="WO">WO — Work Order</option>
+                <option value="FDPAID">FDPAID — FDPAID ID</option>
               </select>
             </label>
             <label style={{ display: "grid", gap: 5, fontSize: 11, fontWeight: 800, color: "#475569" }}>
@@ -95,7 +98,7 @@ export default function FRPAIDGenerator() {
             <div style={{ fontSize: 10, color: "#64748b", fontWeight: 800, marginBottom: 4 }}>LIVE PREVIEW</div>
             <code style={{ fontSize: 15, fontWeight: 900, color: "#4338ca", overflowWrap: "anywhere" }}>{preview}</code>
           </div>
-          <button onClick={generate} style={{ width: "100%", marginTop: 14, padding: "11px 16px", border: "none", borderRadius: 9, background: "linear-gradient(135deg,#4338ca,#7c3aed)", color: "#fff", fontSize: 14, fontWeight: 900, cursor: "pointer", fontFamily: "inherit", boxShadow: "0 4px 14px rgba(67,56,202,0.25)" }}>🔑 FDPAID ID Generate करें</button>
+          <button onClick={generate} style={{ width: "100%", marginTop: 14, padding: "11px 16px", border: "none", borderRadius: 9, background: "linear-gradient(135deg,#4338ca,#7c3aed)", color: "#fff", fontSize: 14, fontWeight: 900, cursor: "pointer", fontFamily: "inherit", boxShadow: "0 4px 14px rgba(67,56,202,0.25)" }}>🔑 {idType} ID Generate करें</button>
         </section>
 
         <aside style={{ display: "grid", gap: 12 }}>
@@ -117,18 +120,16 @@ export default function FRPAIDGenerator() {
           <div style={{ background: "#fffbeb", border: "1.5px solid #fde68a", borderRadius: 16, padding: 16 }}>
             <div style={{ color: "#92400e", fontSize: 12, fontWeight: 900, marginBottom: 6 }}>⚠️ जरूरी सावधानी</div>
             <div style={{ color: "#78350f", fontSize: 12, lineHeight: 1.65 }}>
-              यह training/demo generator है। वास्तविक IFMS में official ID portal द्वारा बनने पर उसी ID को record में नोट करें। सही prefix <strong>FDPAID</strong> है; alternate entry के लिए prefix editable रखा गया है।
+              यह training/demo generator है। वास्तविक IFMS में official portal द्वारा बनने वाली TS, WO या FDPAID ID को ही record में नोट करें।
             </div>
           </div>
 
           <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 16, padding: 16 }}>
-            <div style={{ fontSize: 12, fontWeight: 900, color: "#334155", marginBottom: 10 }}>ID का अर्थ</div>
+            <div style={{ fontSize: 12, fontWeight: 900, color: "#334155", marginBottom: 10 }}>तीनों ID parts</div>
             {[
-              ["FDPAID", "ID का prefix"],
-              ["7542", "Division / office code"],
-              ["240926", "DDMMYY date"],
-              ["01", "Serial number"],
-              ["KACHRULAL", "Work code"],
+              ["TS", "Technical Sanction"],
+              ["WO", "Work Order"],
+              ["FDPAID", "FDPAID process ID"],
             ].map(([part, meaning]) => (
               <div key={part} style={{ display: "flex", justifyContent: "space-between", gap: 10, padding: "7px 0", borderBottom: "1px solid #f1f5f9", fontSize: 11 }}>
                 <code style={{ color: "#4f46e5", fontWeight: 800 }}>{part}</code>
