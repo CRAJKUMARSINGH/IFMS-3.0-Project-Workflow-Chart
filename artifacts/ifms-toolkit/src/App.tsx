@@ -6,6 +6,8 @@ import IDLookup from "@/pages/IDLookup";
 import Quiz from "@/pages/Quiz";
 import Progress from "@/pages/Progress";
 import SupervisorView from "@/pages/SupervisorView";
+import TrainingSlides from "@/pages/TrainingSlides";
+import FRPAIDGenerator from "@/pages/FRPAIDGenerator";
 import BookmarkPanel from "@/components/BookmarkPanel";
 import { BookmarkProvider, useBookmarks } from "@/context/BookmarkContext";
 import { loadName } from "@/hooks/useProgress";
@@ -33,6 +35,8 @@ if (typeof document !== "undefined") {
 
 const tabs = [
   { id: "chart",      icon: "📌", label: "IFMS कार्यप्रवाह" },
+  { id: "slides",     icon: "🖼️", label: "FDPAID ID slides" },
+  { id: "fdpaid",     icon: "🔑", label: "FDPAID ID बनाएं" },
   { id: "wam",        icon: "📋", label: "WAM / विक्रेता" },
   { id: "print",      icon: "🖨️", label: "प्रिंट गाइड" },
   { id: "lookup",     icon: "🔍", label: "ID खोज" },
@@ -212,6 +216,8 @@ function AppInner() {
       {/* ── Page Content ── */}
       <div style={{ maxWidth: 960, margin: "0 auto" }}>
         {active === "chart"      && <WorkflowChart />}
+        {active === "slides"     && <TrainingSlides />}
+        {active === "fdpaid"     && <FRPAIDGenerator />}
         {active === "wam"        && <WAMGuide />}
         {active === "print"      && <PrintGuide />}
         {active === "lookup"     && <IDLookup />}

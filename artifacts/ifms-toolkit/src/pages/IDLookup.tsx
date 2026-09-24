@@ -4,14 +4,14 @@ type IdKind = "AS" | "FS" | "TS" | "BOQ" | "WO" | "Vendor" | "Bill";
 type Status = "active" | "completed" | "pending" | "on-hold";
 
 interface LinkedId { kind: IdKind; value: string; label: string; }
-interface Record {
+interface IdRecord {
   id: string; kind: IdKind; title: string; workName: string;
   department: string; district: string; amount: string; date: string;
   status: Status; linkedIds: LinkedId[];
   details: { label: string; value: string }[];
 }
 
-const DB: Record[] = [
+const DB: IdRecord[] = [
   { id: "AS/2024/PWD/0312", kind: "AS", title: "प्रशासनिक स्वीकृति", workName: "जयपुर-अजमेर मार्ग पर पुल निर्माण कार्य", department: "लोक निर्माण विभाग", district: "जयपुर", amount: "₹ 4,85,00,000", date: "12 मार्च 2024", status: "completed",
     linkedIds: [{ kind: "FS", value: "FS/2024/PWD/0312", label: "वित्तीय स्वीकृति" }, { kind: "TS", value: "TS/2024/PWD/0312", label: "तकनीकी स्वीकृति" }, { kind: "BOQ", value: "BOQ/2024/PWD/0312", label: "BOQ" }, { kind: "WO", value: "WO/2024/PWD/0312", label: "कार्यादेश" }],
     details: [{ label: "स्वीकृत अधिकारी", value: "प्रमुख शासन सचिव, PWD" }, { label: "कार्य की श्रेणी", value: "पुल निर्माण (Major Bridge)" }, { label: "अनुमानित अवधि", value: "24 माह" }, { label: "वित्त वर्ष", value: "2024-25" }] },
@@ -62,7 +62,7 @@ const SC: Record<Status, { label: string; color: string; bg: string; dot: string
 
 export default function IDLookup() {
   const [query, setQuery] = useState("");
-  const [result, setResult] = useState<Record | null>(null);
+  const [result, setResult] = useState<IdRecord | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [showSug, setShowSug] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
