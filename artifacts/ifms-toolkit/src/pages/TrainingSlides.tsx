@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 type SlideMeta = {
   title: string;
@@ -91,13 +91,6 @@ export default function TrainingSlides() {
   const selected = slideMeta[selectedSerial];
   const selectedIndex = serials.indexOf(selectedSerial);
   const color = groupColors[selected.group] ?? "#1d4ed8";
-  const grouped = useMemo(() => {
-    return serials.reduce<Record<string, number[]>>((acc, serial) => {
-      const group = slideMeta[serial].group;
-      (acc[group] ??= []).push(serial);
-      return acc;
-    }, {});
-  }, []);
 
   function move(delta: number) {
     const nextIndex = Math.min(serials.length - 1, Math.max(0, selectedIndex + delta));
@@ -119,7 +112,7 @@ export default function TrainingSlides() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 255px", gap: 16, alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr)", gap: 16, alignItems: "start" }}>
         <section style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 16, overflow: "hidden", boxShadow: "0 4px 18px rgba(15,23,42,0.06)" }}>
           <div style={{ padding: "14px 18px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", borderBottom: "1px solid #e2e8f0" }}>
             <div>
@@ -149,25 +142,6 @@ export default function TrainingSlides() {
           </div>
         </section>
 
-        <aside style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 16, padding: 14, position: "sticky", top: 12, maxHeight: "calc(100vh - 28px)", overflowY: "auto" }}>
-          <div style={{ fontSize: 13, fontWeight: 900, color: "#1e293b", marginBottom: 10 }}>📚 Slide index</div>
-          {Object.entries(grouped).map(([group, items]) => {
-            const groupColor = groupColors[group] ?? "#1d4ed8";
-            return (
-              <div key={group} style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 10, fontWeight: 900, color: groupColor, marginBottom: 5 }}>{group}</div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                  {items.map(serial => (
-                    <button key={serial} onClick={() => setSelectedSerial(serial)} title={slideMeta[serial].title} style={{ width: 31, height: 27, borderRadius: 6, border: selectedSerial === serial ? `2px solid ${groupColor}` : "1px solid #e2e8f0", background: selectedSerial === serial ? `${groupColor}15` : "#f8fafc", color: selectedSerial === serial ? groupColor : "#64748b", fontSize: 10, fontWeight: 800, cursor: "pointer", fontFamily: "inherit" }}>{serial}</button>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-          <div style={{ borderTop: "1px solid #e2e8f0", paddingTop: 12, marginTop: 8, fontSize: 11, color: "#64748b", lineHeight: 1.6 }}>
-            <strong style={{ color: "#334155" }}>Training note:</strong> यह slides मुख्य IFMS workflow से अलग optional FDPAID ID section है। Official portal पर वास्तविक action करने से पहले ID, amount, attachment और officer assignment दोबारा जाँचें।
-          </div>
-        </aside>
       </div>
     </div>
   );
