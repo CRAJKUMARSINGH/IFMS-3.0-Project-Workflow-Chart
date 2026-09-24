@@ -88,6 +88,7 @@ function slidePath(serial: number) {
 
 export default function TrainingSlides() {
   const [selectedSerial, setSelectedSerial] = useState(3);
+  const [showBudgetModule, setShowBudgetModule] = useState(false);
   const selected = slideMeta[selectedSerial];
   const selectedIndex = serials.indexOf(selectedSerial);
   const color = groupColors[selected.group] ?? "#1d4ed8";
@@ -96,6 +97,8 @@ export default function TrainingSlides() {
     const nextIndex = Math.min(serials.length - 1, Math.max(0, selectedIndex + delta));
     setSelectedSerial(serials[nextIndex]);
   }
+
+  if (showBudgetModule) return <BudgetPlanningModule onBack={() => setShowBudgetModule(false)} />;
 
   return (
     <div style={{ padding: "10px 10px" }}>
@@ -110,6 +113,11 @@ export default function TrainingSlides() {
           <span style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.24)", borderRadius: 999, padding: "4px 9px", fontSize: 11, fontWeight: 700 }}>Serial 3 → 59</span>
           <span style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.24)", borderRadius: 999, padding: "4px 9px", fontSize: 11, fontWeight: 700 }}>केवल FDPAID ID segment</span>
         </div>
+      </div>
+
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12, margin: "0 0 10px", padding: "12px 14px", borderRadius: 14, border: "1px solid #bfdbfe", background: "linear-gradient(110deg,#eff6ff,#f0fdfa)" }}>
+        <div><div style={{ color: "#1d4ed8", fontSize: 11, fontWeight: 900 }}>नया सीखने वाला submodule</div><div style={{ color: "#334155", fontSize: 13, marginTop: 3 }}>Budget Head, समय-सीमा और financial bifurcation को उदाहरणों के साथ समझें।</div></div>
+        <button onClick={() => setShowBudgetModule(true)} style={{ border: 0, borderRadius: 9, padding: "9px 13px", background: "linear-gradient(135deg,#1d4ed8,#0f766e)", color: "#fff", fontWeight: 800, fontFamily: "inherit", cursor: "pointer" }}>Budget & Planning खोलें →</button>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr)", gap: 10, alignItems: "start" }}>
@@ -145,4 +153,62 @@ export default function TrainingSlides() {
       </div>
     </div>
   );
+}
+
+type BudgetPlanningModuleProps = { onBack: () => void };
+function recommendedWorkMonths(amountLakhs: number) { return amountLakhs <= 50 ? 6 : amountLakhs <= 100 ? 9 : amountLakhs <= 150 ? 12 : 15; }
+function addCalendarMonths(date: Date, months: number) { const result = new Date(date); const day = result.getDate(); result.setDate(1); result.setMonth(result.getMonth() + months); const lastDay = new Date(result.getFullYear(), result.getMonth() + 1, 0).getDate(); result.setDate(Math.min(day, lastDay)); return result; }
+function fyText(year: number) { return String(year) + "–" + String((year + 1) % 100).padStart(2, "0"); }
+
+function BudgetPlanningModule({ onBack }: BudgetPlanningModuleProps) {
+  const [amountLakhs, setAmountLakhs] = useState(80);
+  const [startDate, setStartDate] = useState("2026-06-01");
+  const [workMonths, setWorkMonths] = useState(9);
+  const [fyYear, setFyYear] = useState(2026);
+  const [crossYearShare, setCrossYearShare] = useState(40);
+  const recommendedMonths = recommendedWorkMonths(amountLakhs);
+  const start = startDate ? new Date(startDate + "T00:00:00") : null;
+  const completion = start && !Number.isNaN(start.getTime()) ? addCalendarMonths(start, workMonths) : null;
+  const fyStart = new Date(fyYear, 3, 1);
+  const fyEnd = new Date(fyYear + 1, 2, 31, 23, 59, 59, 999);
+  const startsInFY = Boolean(start && start >= fyStart && start <= fyEnd);
+  const finishesInFY = Boolean(startsInFY && completion && completion <= fyEnd);
+  const statusText = startsInFY ? (finishesInFY ? "चुने FY के भीतर" : "FY boundary पार / जाँच आवश्यक") : "start date चुने FY के बाहर—share verify करें";
+  const firstPercent = finishesInFY ? 100 : Math.max(0, Math.min(100, crossYearShare));
+  const total = Math.max(0, Math.round(amountLakhs * 100000));
+  const fyAmount = Math.round(total * firstPercent / 100);
+  const nextAmount = total - fyAmount;
+  const money = (n: number) => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n);
+  const dateLabel = (d: Date | null) => d ? d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "तारीख चुनें";
+  const examples = [
+    { title: "आपका example 1", amount: "राशि brief में नहीं दी गई", schedule: "काम जून 2026 तक शुरू · 8 महीने · समाप्ति फरवरी 2027", split: "भुगतान भी FY में हो तो 2026–27: 100%" },
+    { title: "आपका example 2", amount: "राशि brief में नहीं दी गई", schedule: "Brief में समाप्ति मई 2027 दी गई है", split: "2026–27: 70% · 2027–28: 30%", note: "तारीख जाँचें: यदि tender award दिसंबर 2026 में हो और उसके बाद पूरे 8 महीने काम चले, तो समाप्ति लगभग अगस्त 2027 होगी—मई नहीं। 70/30 को वास्तविक schedule से सत्यापित करें।" },
+    { title: "अतिरिक्त example 1 · ₹45 लाख", amount: "₹50 लाख तक → 6 महीने", schedule: "काम जून 2026 में शुरू · दिसंबर 2026 में पूरा", split: "यदि भुगतान उसी FY में पूरा हो: 2026–27 में 100%" },
+    { title: "अतिरिक्त example 2 · ₹80 लाख", amount: "₹50 लाख–₹1 करोड़ → 9 महीने", schedule: "काम सितंबर 2026 में शुरू · जून 2027 में पूरा", split: "FY पार होगा; 40/60 brief का baseline है, actual cash-flow से तय करें" },
+    { title: "अतिरिक्त example 3 · ₹1.2 करोड़", amount: "₹1–1.5 करोड़ → 12 महीने", schedule: "काम अप्रैल 2026 में शुरू · अप्रैल 2027 में पूरा", split: "FY पार होगा; actual schedule के अनुसार राशि बाँटें" },
+    { title: "अतिरिक्त example 4 · ₹1.8 करोड़", amount: "₹1.5 करोड़ से अधिक → 15 महीने", schedule: "काम अप्रैल 2026 में शुरू · जुलाई 2027 में पूरा", split: "FY पार होगा; actual schedule के अनुसार राशि बाँटें" },
+  ];
+  const card = { background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: 15 };
+  return <div style={{ padding: "12px 10px 24px", maxWidth: 1100, margin: "0 auto" }}>
+    <button onClick={onBack} style={{ border: "1px solid #cbd5e1", borderRadius: 9, background: "#fff", color: "#1e40af", padding: "8px 11px", fontWeight: 800, fontFamily: "inherit", cursor: "pointer", marginBottom: 12 }}>← वापस screenshot slides पर</button>
+    <header style={{ padding: "18px 20px", borderRadius: 18, color: "#fff", background: "linear-gradient(135deg,#172554,#1d4ed8 55%,#0f766e)", marginBottom: 14 }}><div style={{ fontSize: 11, letterSpacing: 1.2, fontWeight: 800, opacity: 0.8 }}>TRAINING SUBMODULE · DECISION GUIDE</div><h2 style={{ margin: "5px 0", fontSize: 24, fontWeight: 900 }}>Budget Head → समय → Financial Bifurcation</h2><p style={{ margin: 0, color: "rgba(255,255,255,0.84)", fontSize: 13, lineHeight: 1.6 }}>पहले sanction letter से सही head जाँचें, फिर duration और tender schedule से FY-wise अनुमान बनाएँ।</p></header>
+    <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 12, marginBottom: 12 }}>
+      <article style={card}><div style={{ color: "#1d4ed8", fontSize: 11, fontWeight: 900 }}>1 · BUDGET HEAD</div><h3 style={{ margin: "6px 0 8px", fontSize: 18 }}>Sanction letter से head तय करें</h3><p style={{ margin: "0 0 10px", color: "#475569", fontSize: 13, lineHeight: 1.55 }}>Head और Centre/State share sanction letter से मिलाएँ; समान दिखने वाले काम से अनुमान न लगाएँ।</p><div style={{ background: "#eff6ff", borderRadius: 10, padding: 11, color: "#1e3a8a", fontSize: 13, lineHeight: 1.6 }}><strong>दिया गया sample:</strong> 4059 — Centre 60% · 4049 — State 40%. केवल उदाहरण; वास्तविक share अपने sanction letter से verify करें।</div></article>
+      <article style={card}><div style={{ color: "#0f766e", fontSize: 11, fontWeight: 900 }}>2 · काम का प्रकार</div><h3 style={{ margin: "6px 0 8px", fontSize: 18 }}>फिर सही category चुनें</h3><ul style={{ margin: 0, paddingLeft: 19, color: "#475569", fontSize: 13, lineHeight: 1.75 }}><li>Road maintenance: brief के अनुसार non-scheme head.</li><li>Building work: अलग head.</li><li>AS head तभी चुनें जब work category और sanction-letter entry मेल खाएँ।</li></ul><div style={{ marginTop: 10, background: "#f0fdfa", borderRadius: 10, padding: 10, color: "#115e59", fontSize: 12, lineHeight: 1.55 }}>Trial-and-error के बजाय letter में head/code, scheme status और share जाँचें।</div></article>
+    </section>
+    <section style={{ ...card, marginBottom: 12 }}><div style={{ color: "#7c3aed", fontSize: 11, fontWeight: 900 }}>3 · TIME BAND</div><h3 style={{ margin: "6px 0 12px", fontSize: 18 }}>राशि से प्रारम्भिक work duration चुनें</h3><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 9 }}>{[["₹50 लाख तक", "6 महीने"], ["₹50 लाख से अधिक–₹1 करोड़ तक", "9 महीने"], ["₹1 करोड़ से अधिक–₹1.5 करोड़ तक", "12 महीने"], ["₹1.5 करोड़ से अधिक", "15 महीने"]].map(([band, months]) => <div key={band} style={{ background: "#f5f3ff", border: "1px solid #ddd6fe", borderRadius: 10, padding: 12 }}><div style={{ color: "#5b21b6", fontSize: 12, fontWeight: 800 }}>{band}</div><div style={{ fontSize: 20, fontWeight: 900, marginTop: 4 }}>{months}</div></div>)}</div><p style={{ margin: "10px 0 0", color: "#64748b", fontSize: 12 }}>Brief के planning bands; अवधि approved estimate, tender और work order से मिलाएँ।</p></section>
+    <section style={{ ...card, marginBottom: 12 }}><div style={{ color: "#c2410c", fontSize: 11, fontWeight: 900 }}>4 · FINANCIAL BIFURCATION</div><h3 style={{ margin: "6px 0 8px", fontSize: 18 }}>Tender position से FY-wise खर्च समझें</h3><ol style={{ margin: 0, paddingLeft: 20, color: "#334155", fontSize: 13, lineHeight: 1.75 }}><li>Tender/award की वास्तविक तारीख लिखें।</li><li>Work duration जोड़कर completion date निकालें।</li><li>31 March से तुलना करें; उसी FY में पूरा होने का example 100% है।</li><li>FY पार हो तो expected bills/progress से split करें; brief का 40/60 baseline या example-specific 70/30 तभी लगाएँ जब schedule support करे।</li></ol><p style={{ margin: "10px 0 0", color: "#9a3412", background: "#ffedd5", borderRadius: 9, padding: 10, fontSize: 12 }}>सिर्फ completion date से 40/60 या 70/30 तय नहीं होता। Approved cash-flow और payment schedule verify करें।</p></section>
+    <section style={{ ...card, background: "#f8fafc", marginBottom: 14 }}><div style={{ color: "#1d4ed8", fontSize: 11, fontWeight: 900 }}>INTERACTIVE ESTIMATE</div><h3 style={{ margin: "6px 0 4px", fontSize: 18 }}>Completion date और FY share का अभ्यास करें</h3><p style={{ margin: "0 0 12px", color: "#64748b", fontSize: 12 }}>Cross-year case में 40% शुरुआती मान है; schedule देखकर इसे बदलें, जैसे दूसरे example में 70%।</p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(175px,1fr))", gap: 10 }}>
+        <label style={{ display: "grid", gap: 5, fontSize: 12, fontWeight: 700 }}>Project amount (लाख में)<input type="number" min="0" value={amountLakhs} onChange={e => setAmountLakhs(Math.max(0, Number(e.target.value) || 0))} style={{ padding: 9, border: "1px solid #cbd5e1", borderRadius: 8, font: "inherit" }} /><span style={{ color: "#64748b", fontSize: 11 }}>Suggested duration: {recommendedMonths} महीने</span></label>
+        <label style={{ display: "grid", gap: 5, fontSize: 12, fontWeight: 700 }}>Estimated start / award date<input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} style={{ padding: 9, border: "1px solid #cbd5e1", borderRadius: 8, font: "inherit" }} /></label>
+        <label style={{ display: "grid", gap: 5, fontSize: 12, fontWeight: 700 }}>Planned work duration (महीने)<input type="number" min="1" max="60" value={workMonths} onChange={e => setWorkMonths(Math.max(1, Number(e.target.value) || 1))} style={{ padding: 9, border: "1px solid #cbd5e1", borderRadius: 8, font: "inherit" }} /><button type="button" onClick={() => setWorkMonths(recommendedMonths)} style={{ border: 0, padding: 0, background: "transparent", color: "#1d4ed8", textAlign: "left", font: "inherit", fontSize: 11, cursor: "pointer" }}>Suggested अवधि लागू करें</button></label>
+        <label style={{ display: "grid", gap: 5, fontSize: 12, fontWeight: 700 }}>Financial year<select value={fyYear} onChange={e => setFyYear(Number(e.target.value))} style={{ padding: 9, border: "1px solid #cbd5e1", borderRadius: 8, font: "inherit" }}>{[2025, 2026, 2027, 2028, 2029].map(year => <option key={year} value={year}>{fyText(year)}</option>)}</select></label>
+        {!finishesInFY && <label style={{ display: "grid", gap: 5, fontSize: 12, fontWeight: 700 }}>पहले FY में अनुमानित खर्च (%)<input type="number" min="0" max="100" value={crossYearShare} onChange={e => setCrossYearShare(Math.max(0, Math.min(100, Number(e.target.value) || 0)))} style={{ padding: 9, border: "1px solid #cbd5e1", borderRadius: 8, font: "inherit" }} /><span style={{ color: "#64748b", fontSize: 11 }}>Brief baseline 40%; schedule के अनुसार बदलें।</span></label>}
+      </div>
+      <div style={{ marginTop: 12, padding: 13, borderRadius: 11, background: finishesInFY ? "#ecfdf5" : "#fff7ed", border: "1px solid " + (finishesInFY ? "#a7f3d0" : "#fed7aa") }}><div style={{ fontSize: 13, fontWeight: 900 }}>अनुमानित completion: {dateLabel(completion)} · {statusText}</div><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))", gap: 8, marginTop: 9, fontSize: 13 }}><div>FY {fyText(fyYear)} · {firstPercent}% · <strong>{money(fyAmount)}</strong></div><div>FY {fyText(fyYear + 1)} · {100 - firstPercent}% · <strong>{money(nextAmount)}</strong></div></div>{!finishesInFY && <div style={{ marginTop: 8, fontSize: 11 }}>गणना आपके डाले प्रतिशत से है—यह स्वतः स्वीकृत allocation नहीं है।</div>}</div>
+    </section>
+    <section style={{ marginBottom: 14 }}><h3 style={{ margin: "0 0 9px", fontSize: 18 }}>Worked examples · निर्णय का क्रम</h3><div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(250px,1fr))", gap: 10 }}>{examples.map(example => <article key={example.title} style={card}><h4 style={{ margin: "0 0 6px", color: "#1e3a8a", fontSize: 14 }}>{example.title}</h4><div style={{ color: "#475569", fontSize: 12, lineHeight: 1.55 }}><strong>{example.amount}</strong><br />{example.schedule}<br /><strong>{example.split}</strong></div>{"note" in example && <div style={{ marginTop: 8, padding: 9, background: "#fff7ed", color: "#9a3412", borderRadius: 8, fontSize: 11, lineHeight: 1.5 }}>{example.note}</div>}</article>)}</div></section>
+    <p style={{ margin: 0, padding: 11, borderRadius: 10, background: "#f1f5f9", color: "#64748b", fontSize: 11, lineHeight: 1.55 }}>Learning aid. Sanction letter, tender/work order, approved duration और actual cash-flow schedule अंतिम आधार हैं; sample head/percentages दूसरे काम पर स्वतः लागू न करें।</p>
+  </div>;
 }
