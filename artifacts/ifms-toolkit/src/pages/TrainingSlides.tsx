@@ -99,7 +99,7 @@ export default function TrainingSlides() {
 
   return (
     <div style={{ padding: "10px 10px" }}>
-      <div style={{ background: "linear-gradient(135deg,#172554,#1d4ed8 58%,#0891b2)", color: "#fff", borderRadius: 18, padding: "8px 10px", marginBottom: 8, boxShadow: "0 10px 30px rgba(29,78,216,0.22)" }}>
+      <div style={{ background: "linear-gradient(135deg,#172554,#1d4ed8 58%,#0891b2)", color: "#fff", borderRadius: 18, padding: "12px 14px", marginBottom: 8, boxShadow: "0 10px 30px rgba(29,78,216,0.22)" }}>
         <div style={{ fontSize: 11, letterSpacing: 1.4, opacity: 0.75, fontWeight: 800 }}>FDPAID ID SEGMENT · SCREENSHOT WALKTHROUGH</div>
         <h2 style={{ margin: "4px 0 3px", fontSize: 19, fontWeight: 900 }}>FDPAID ID की slides — क्रम से सीखें</h2>
         <p style={{ margin: 0, maxWidth: 720, color: "rgba(255,255,255,0.78)", fontSize: 12, lineHeight: 1.5 }}>
@@ -107,8 +107,8 @@ export default function TrainingSlides() {
         </p>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
           <span style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.24)", borderRadius: 999, padding: "4px 9px", fontSize: 11, fontWeight: 700 }}>57 screens</span>
-          <span style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.24)", borderRadius: 999, padding: "5px 11px", fontSize: 11, fontWeight: 700 }}>Serial 3 → 59</span>
-          <span style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.24)", borderRadius: 999, padding: "5px 11px", fontSize: 11, fontWeight: 700 }}>केवल FDPAID ID segment</span>
+          <span style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.24)", borderRadius: 999, padding: "4px 9px", fontSize: 11, fontWeight: 700 }}>Serial 3 → 59</span>
+          <span style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.24)", borderRadius: 999, padding: "4px 9px", fontSize: 11, fontWeight: 700 }}>केवल FDPAID ID segment</span>
         </div>
       </div>
 
@@ -128,16 +128,16 @@ export default function TrainingSlides() {
             <img src={slidePath(selectedSerial)} alt={`IFMS training screenshot ${selectedSerial}`} style={{ display: "block", width: "100%", height: "min(78vh, 900px)", objectFit: "contain", borderRadius: 10, border: "1px solid #cbd5e1", background: "#fff" }} />
           </div>
           <div style={{ padding: "9px 12px" }}>
-            <div style={{ display: "flex", gap: 10, alignItems: "flex-start", background: `${color}0d`, border: `1px solid ${color}35`, borderRadius: 11, padding: "12px 14px" }}>
+            <div style={{ display: "flex", gap: 10, alignItems: "flex-start", background: `${color}0d`, border: `1px solid ${color}35`, borderRadius: 11, padding: "8px 10px" }}>
               <span style={{ fontSize: 20 }}>💡</span>
               <div>
                 <div style={{ fontSize: 11, color, fontWeight: 900, marginBottom: 3 }}>इस screen पर क्या करना है?</div>
                 <div style={{ fontSize: 12, color: "#334155", lineHeight: 1.5 }}>{selected.instruction}</div>
               </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 14 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 8 }}>
               <button onClick={() => move(-1)} disabled={selectedIndex === 0} style={{ flex: 1, padding: "8px 10px", borderRadius: 9, border: "1px solid #cbd5e1", background: selectedIndex === 0 ? "#f8fafc" : "#fff", color: selectedIndex === 0 ? "#94a3b8" : "#1e40af", fontWeight: 800, cursor: selectedIndex === 0 ? "not-allowed" : "pointer", fontFamily: "inherit" }}>← पिछली slide</button>
-              <button onClick={() => move(1)} disabled={selectedIndex === serials.length - 1} style={{ flex: 1, padding: "10px 14px", borderRadius: 9, border: "none", background: selectedIndex === serials.length - 1 ? "#cbd5e1" : "linear-gradient(135deg,#1d4ed8,#4f46e5)", color: "#fff", fontWeight: 800, cursor: selectedIndex === serials.length - 1 ? "not-allowed" : "pointer", fontFamily: "inherit" }}>अगली slide →</button>
+              <button onClick={() => move(1)} disabled={selectedIndex === serials.length - 1} style={{ flex: 1, padding: "8px 10px", borderRadius: 9, border: "none", background: selectedIndex === serials.length - 1 ? "#cbd5e1" : "linear-gradient(135deg,#1d4ed8,#4f46e5)", color: "#fff", fontWeight: 800, cursor: selectedIndex === serials.length - 1 ? "not-allowed" : "pointer", fontFamily: "inherit" }}>अगली slide →</button>
             </div>
           </div>
         </section>
